@@ -17,7 +17,12 @@ pipeline {
                 echo 'Deploy quote-server to Nexus using Maven'
                 withCredentials([usernamePassword(credentialsId: 'nexus-credentials-id',
                 usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                    sh 'mvn -B -DskipTests=true deploy'
+                    sh '''
+                    mvn -B -DskipTests=true deploy
+                    -DrepositoryId=maven-snapshots
+                    -Dusername=$NEXUS_USERNAME
+                    -Dpassword=$NEXUS_PASSWORD
+                    '''
                 }
                 stash includes: 'target/*.jar', name: 'quote-jar'
             }
