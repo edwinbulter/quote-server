@@ -2,11 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout source code from git') {
-            steps {
-                git 'https://github.com/edwinbulter/quote-server.git'
-            }
-        }
 
         stage('Build snapshot') {
             steps {
