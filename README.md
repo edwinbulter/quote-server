@@ -1,1 +1,1 @@
-"# quote-server" 
+# quote-server 

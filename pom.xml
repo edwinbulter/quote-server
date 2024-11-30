@@ -8,24 +8,19 @@
         <version>3.3.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>ebulter</groupId>
     <artifactId>quote-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>quote-server</name>
     <description>quote-server</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
+
     <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
+        <connection>scm:git:https://github.com/edwinbulter/quote-server.git</connection>
+        <developerConnection>scm:git:ssh://github.com/edwinbulter/quote-server.git</developerConnection>
+        <url>https://github.com/edwin-bulter/quote-server</url>
     </scm>
+
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -60,12 +55,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.jetbrains</groupId>-->
-<!--            <artifactId>annotations</artifactId>-->
-<!--            <version>24.1.0</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -77,4 +66,26 @@
         </plugins>
     </build>
 
+    <repositories>
+        <!-- build dependencies -->
+        <repository>
+            <id>maven-releases</id>
+            <url>http://localhost:2020/repository/maven-releases/</url>
+        </repository>
+        <repository>
+            <id>maven-snapshots</id>
+            <url>http://localhost:2020/repository/maven-snapshots/</url>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <!-- artifact storage locations for mvn deploy -->
+        <repository>
+            <id>maven-releases</id>
+            <url>http://localhost:2020/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven-snapshots</id>
+            <url>http://localhost:2020/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
