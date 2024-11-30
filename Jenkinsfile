@@ -15,23 +15,18 @@ pipeline {
         stage('Nexus deployment') {
             steps{
                 echo 'Deploy quote-server to Nexus using Maven'
-                withCredentials([usernamePassword(credentialsId: 'nexus-credentials-id',
-                usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                    sh '''
-                    mvn -B -DskipTests=true deploy
-                    -DrepositoryId=maven-snapshots
-                    -Dusername=$NEXUS_USERNAME
-                    -Dpassword=$NEXUS_PASSWORD
-                    '''
+                withMaven(mavenSettingsConfig: '8268de39-819f-460c-a9e1-b5532d856176') {
+                    sh 'mvn -B -DskipTests=true deploy -DrepositoryId=maven-snapshots'
                 }
                 stash includes: 'target/*.jar', name: 'quote-jar'
+                echo 'Finished with Deploy quote-server to Nexus using Maven'
             }
         }
 
         stage('Stop service') {
             steps {
                 echo 'Stop quote-server systemd service'
-                sh 'systemctl stop quote'
+                sh 'sudo systemctl stop quote'
            }
         }
 
@@ -39,14 +34,14 @@ pipeline {
             steps {
                 echo 'Copy quote-server jar to /opt/quote'
                 unstash 'quote-jar'
-                sh 'cp *.jar /opt/quote/'
+                sh 'cp target/*.jar /opt/quote/'
             }
         }
 
         stage('Start service') {
             steps {
                 echo 'Start quote-server systemd service'
-                sh 'systemctl start quote'
+                sh 'sudo systemctl start quote'
            }
         }
     }
