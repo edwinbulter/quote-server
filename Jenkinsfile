@@ -26,22 +26,22 @@ pipeline {
         stage('Stop service') {
             steps {
                 echo 'Stop quote-server systemd service'
-                sh 'sudo systemctl stop quote'
+                sh 'sudo systemctl stop quote-server'
            }
         }
 
         stage('Copy Jar') {
             steps {
-                echo 'Copy quote-server jar to /opt/quote'
+                echo 'Copy quote-server jar to /opt/quote-server'
                 unstash 'quote-jar'
-                sh 'cp target/*.jar /opt/quote/'
+                sh 'cp target/*.jar /opt/quote-server/'
             }
         }
 
         stage('Start service') {
             steps {
                 echo 'Start quote-server systemd service'
-                sh 'sudo systemctl start quote'
+                sh 'sudo systemctl start quote-server'
            }
         }
     }
