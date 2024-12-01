@@ -47,6 +47,7 @@ public class QuoteService {
         if (idsToExclude != null && idsToExclude.size() >= currentDatabaseQuotes.size()) {
             //all quotes from the db have already been returned once to this user, so try to add some new to the db
             int nrOfNewQuotesInTheDB = fetchQuotesFromZenAndAddToDatabase(1);
+            logger.info("Saved {} quotes to database", nrOfNewQuotesInTheDB);
             if (nrOfNewQuotesInTheDB == 0) {
                 //no new quotes found, so we can't exclude any this time
                 idsToExclude.clear();
@@ -92,6 +93,8 @@ public class QuoteService {
             logger.error("Did not receive enough quotes from ZenQuotes, will fallback on using the FallbackFile with quotes.");
             fetchedQuotes = FallbackFileReader.readQuotes();
             logger.warn("Read {} quotes from FallbackFile", fetchedQuotes.size());
+        } else {
+            logger.info("Fetched {} quotes from Zen", fetchedQuotes.size());
         }
         return fetchedQuotes;
     }
