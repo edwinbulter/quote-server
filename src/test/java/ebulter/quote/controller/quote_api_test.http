@@ -1,3 +1,6 @@
+### fetch quotes from zen
+GET https://zenquotes.io/api/quotes
+
 ### fetch random quote with GET
 GET http://localhost:8180/api/v1/quote
 

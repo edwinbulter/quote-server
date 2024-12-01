@@ -20,7 +20,7 @@ public class StartupRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         logger.info("Initialize database when empty");
         if (quoteService.countQuotesInDatabase() < 50) {
-            int nrOfSavedQuotes = quoteService.fetchQuotesFromZenAndAddToDatabase(4);
+            int nrOfSavedQuotes = quoteService.fetchQuotesFromZenAndAddToDatabase(1);
             logger.info("Saved {} quotes to database", nrOfSavedQuotes);
         }
         logger.info("Finished initializing database");

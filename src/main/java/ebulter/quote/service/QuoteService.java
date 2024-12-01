@@ -3,6 +3,8 @@ package ebulter.quote.service;
 import ebulter.quote.client.ZenQuotesClient;
 import ebulter.quote.model.Quote;
 import ebulter.quote.repository.QuoteRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -10,8 +12,8 @@ import java.util.*;
 
 @Service
 public class QuoteService {
+    private static final Logger logger = LoggerFactory.getLogger(QuoteService.class);
     private static final int DEFAULT_LIKES = 0;
-
     private final ZenQuotesClient zenQuotesClient;
     private final QuoteRepository quoteRepository;
     private final QuoteEmitter quoteEmitter;
@@ -28,7 +30,7 @@ public class QuoteService {
     }
 
     public int fetchQuotesFromZenAndAddToDatabase(int numberOfFetches) {
-        Set<Quote> fetchedQuotes = zenQuotesClient.getSomeUniqueQuotes(numberOfFetches);
+        Set<Quote> fetchedQuotes = fetchQuotesFromZenWithFallback(numberOfFetches);
         Set<Quote> currentDatabaseQuotes = new HashSet<>(quoteRepository.findAll());
         //Note: In the following statement, the quotes are compared (and subsequently removed) solely by quoteText.
         fetchedQuotes.removeAll(currentDatabaseQuotes);
@@ -67,7 +69,6 @@ public class QuoteService {
         return quoteEmitter.getQuoteFlux();
     }
 
-
     public int likeQuote(long id) {
         Optional<Quote> foundQuote = quoteRepository.findById(id);
         foundQuote.ifPresent(quoteEmitter::publishQuote);
@@ -78,6 +79,21 @@ public class QuoteService {
         quote.setLikes(quote.getLikes() + 1);
         quoteRepository.save(quote);
         return quote.getLikes();
+    }
+
+    private Set<Quote> fetchQuotesFromZenWithFallback(int numberOfFetches) {
+        Set<Quote> fetchedQuotes = null;
+        try {
+            fetchedQuotes = zenQuotesClient.getSomeUniqueQuotes(numberOfFetches);
+        } catch (Exception e) {
+            logger.error("Failed to read quotes from ZenQuotes: {}", e.getMessage());
+        }
+        if (fetchedQuotes == null || fetchedQuotes.size() < 2) {
+            logger.error("Did not receive enough quotes from ZenQuotes, will fallback on using the FallbackFile with quotes.");
+            fetchedQuotes = FallbackFileReader.readQuotes();
+            logger.warn("Read {} quotes from FallbackFile", fetchedQuotes.size());
+        }
+        return fetchedQuotes;
     }
 
 }

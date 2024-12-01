@@ -15,7 +15,7 @@ public class QuoteEmitter {
     }
 
     public void publishQuote(Quote quote) {
-        sink.tryEmitNext(quote.getQuoteText());
+        sink.tryEmitNext("%s - %s".formatted(quote.getQuoteText(), quote.getAuthor()));
     }
 
     public Flux<String> getQuoteFlux() {
