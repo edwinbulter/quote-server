@@ -42,6 +42,16 @@ public class QuoteService {
 
     public Quote readRandomQuoteFromDatabase(Set<Long> idsToExclude) {
         List<Quote> currentDatabaseQuotes = quoteRepository.findAll();
+        if (idsToExclude != null && idsToExclude.size() >= currentDatabaseQuotes.size()) {
+            //all quotes from the db have already been returned once to this user, so try to add some new to the db
+            int nrOfNewQuotesInTheDB = fetchQuotesFromZenAndAddToDatabase(1);
+            if (nrOfNewQuotesInTheDB == 0) {
+                //no new quotes found, so we can't exclude any this time
+                idsToExclude.clear();
+            } else {
+                currentDatabaseQuotes = quoteRepository.findAll();
+            }
+        }
         Random random = new Random();
         if (idsToExclude != null && !idsToExclude.isEmpty()) {
             List<Quote> filteredDatabaseQuotes = currentDatabaseQuotes.stream().filter(quote -> !idsToExclude.contains(quote.getId())).toList();
