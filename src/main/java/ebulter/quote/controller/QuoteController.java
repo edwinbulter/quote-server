@@ -6,6 +6,7 @@ import ebulter.quote.wsmodel.WsQuote;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -37,5 +38,10 @@ public class QuoteController {
     @GetMapping("/quote/stream")
     public Flux<String> streamLikedQuotes() {
         return quoteService.streamLikedQuotes();
+    }
+
+    @GetMapping("/quote/liked")
+    public List<WsQuote> getLikedQuotes() {
+        return QuoteMapper.mapToWsQuotes(quoteService.readLikedQuotesFromDatabase());
     }
 }

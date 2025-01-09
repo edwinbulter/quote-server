@@ -66,6 +66,10 @@ public class QuoteService {
         }
     }
 
+    public List<Quote> readLikedQuotesFromDatabase() {
+        return quoteRepository.findByLikesGreaterThanOrderByLikesDescIdAsc(0);
+    }
+
     public Flux<String> streamLikedQuotes() {
         return quoteEmitter.getQuoteFlux();
     }

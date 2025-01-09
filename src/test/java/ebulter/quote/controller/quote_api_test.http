@@ -1,6 +1,9 @@
 ### fetch quotes from zen
 GET https://zenquotes.io/api/quotes
 
+### fetch random quote from zen
+GET https://zenquotes.io/api/random
+
 ### fetch random quote with GET
 GET http://localhost:8180/api/v1/quote
 
@@ -12,6 +15,9 @@ Content-Type: application/json
 
 ### like a quote with PATCH and id
 PATCH http://localhost:8180/api/v1/quote/5/like
+
+### fetch all liked quotes with GET
+GET http://localhost:8180/api/v1/quote/liked
 
 
 
