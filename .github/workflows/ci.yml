@@ -9,6 +9,11 @@ on:
     branches:
       - main
 
+  # Trigger the CI pipeline for Dependabot PRs
+  pull_request_target:
+    branches:
+      - main
+
 jobs:
   build:
     # Use the latest Ubuntu environment for the runner
