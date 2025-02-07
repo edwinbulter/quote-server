@@ -1,0 +1,25 @@
+name: auto-merge
+
+on:
+  pull_request:
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check if dependency is "io.projectreactor"
+        id: check_dependency
+        run: |
+          if [[ "${{ github.event.pull_request.title }}" =~ "io\.projectreactor" ]]; then
+            echo "is_projectreactor=true" >> $GITHUB_ENV
+          else
+            echo "is_projectreactor=false" >> $GITHUB_ENV
+          fi
+
+      - uses: ahmadnassri/action-dependabot-auto-merge@v2
+        if: env.is_projectreactor == 'false' # Exclude io.projectreactor PRs
+        with:
+          target: minor
+          github-token: ${{ secrets.dependabot_auto_merge_token }}
