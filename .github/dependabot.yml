@@ -4,6 +4,6 @@ updates:
     directory: "/"            # Path where the `pom.xml` file is located
     schedule:
       interval: "daily"
-      time: "22:45"
+      time: "22:56"
       timezone: "CET"
     open-pull-requests-limit: 5  # Max number of open PRs (to avoid clutter)
