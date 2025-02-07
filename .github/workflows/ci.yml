@@ -1,0 +1,45 @@
+name: CI Pipeline
+
+# Trigger the CI pipeline on pushes and pull requests to the main branch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    # Use the latest Ubuntu environment for the runner
+    runs-on: ubuntu-latest
+
+    # Define steps for the build job
+    steps:
+      # Step 1: Checkout code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Java for the build
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21' # Use Java 21, since your project supports this version
+          distribution: 'temurin'
+
+      # Step 3: Cache Maven dependencies to speed up builds
+      - name: Cache Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Step 4: Build the Spring Boot project using Maven
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
+      # Step 5: Run tests
+      - name: Run tests
+        run: mvn test
