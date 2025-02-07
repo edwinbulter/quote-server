@@ -3,5 +3,6 @@ updates:
   - package-ecosystem: "maven" # Dependabot will target Maven dependencies
     directory: "/"            # Path where the `pom.xml` file is located
     schedule:
-      interval: "weekly"      # Check for updates every week
+      interval: "daily"
+      time: "22:33"
     open-pull-requests-limit: 5  # Max number of open PRs (to avoid clutter)
